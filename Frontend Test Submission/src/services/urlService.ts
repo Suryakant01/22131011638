@@ -8,10 +8,10 @@ const getUrlsFromStorage = (): ShortenedUrl[] => {
   try {
     const storedUrls = localStorage.getItem(STORAGE_KEY);
     if (storedUrls) return JSON.parse(storedUrls);
-    Log('frontend', 'info', 'service', 'No URLs found in localStorage, returning empty array.');
+    Log('frontend', 'info', 'component', 'No URLs found in localStorage, returning empty array.');
     return [];
   } catch (error) {
-    Log('frontend', 'error', 'service', `Failed to parse URLs from localStorage: ${error}`);
+    Log('frontend', 'error', 'component', `Failed to parse URLs from localStorage: ${error}`);
     return [];
   }
 };
@@ -19,9 +19,9 @@ const getUrlsFromStorage = (): ShortenedUrl[] => {
 const saveUrlsToStorage = (urls: ShortenedUrl[]) => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(urls));
-    Log('frontend', 'debug', 'service', `Successfully saved ${urls.length} URLs to localStorage.`);
+    Log('frontend', 'debug', 'component', `Successfully saved ${urls.length} URLs to localStorage.`);
   } catch (error) {
-    Log('frontend', 'error', 'service', `Failed to save URLs to localStorage: ${error}`);
+    Log('frontend', 'error', 'component', `Failed to save URLs to localStorage: ${error}`);
   }
 };
 
@@ -31,7 +31,7 @@ export const urlService = {
   getUrlByShortcode: (shortcode: string): ShortenedUrl | undefined => {
     const urls = getUrlsFromStorage();
     const foundUrl = urls.find(url => url.id === shortcode);
-    if (!foundUrl) Log('frontend', 'warn', 'service', `URL with shortcode "${shortcode}" not found.`);
+    if (!foundUrl) Log('frontend', 'warn', 'component', `URL with shortcode "${shortcode}" not found.`);
     return foundUrl;
   },
 
@@ -43,12 +43,12 @@ export const urlService = {
     if (customShortcode) {
       if (!/^[a-zA-Z0-9]{4,10}$/.test(customShortcode)) {
         const msg = 'Custom shortcode must be 4-10 alphanumeric characters.';
-        Log('frontend', 'warn', 'service', msg);
+        Log('frontend', 'warn', 'component', msg);
         return { success: false, error: msg };
       }
       if (urlService.isShortcodeTaken(customShortcode)) {
         const msg = `Shortcode "${customShortcode}" is already taken.`;
-        Log('frontend', 'warn', 'service', msg);
+        Log('frontend', 'warn', 'component', msg);
         return { success: false, error: msg };
       }
     }
@@ -56,7 +56,7 @@ export const urlService = {
     const shortcode = customShortcode || nanoid(6);
     if (!customShortcode && urlService.isShortcodeTaken(shortcode)) {
         const msg = 'A collision occurred while generating a shortcode. Please try again.';
-        Log('frontend', 'error', 'service', msg);
+        Log('frontend', 'error', 'component', msg);
         return { success: false, error: msg };
     }
 
@@ -72,7 +72,7 @@ export const urlService = {
 
     const urls = getUrlsFromStorage();
     saveUrlsToStorage([...urls, newUrl]);
-    Log('frontend', 'info', 'service', `Successfully created short URL for ${longUrl} with shortcode ${shortcode}`);
+    Log('frontend', 'info', 'component', `Successfully created short URL for ${longUrl} with shortcode ${shortcode}`);
     return { success: true, data: newUrl };
   },
 
@@ -88,9 +88,9 @@ export const urlService = {
         location: MOCK_LOCATIONS[Math.floor(Math.random() * MOCK_LOCATIONS.length)],
       });
       saveUrlsToStorage(urls);
-      Log('frontend', 'info', 'service', `Click recorded for shortcode "${shortcode}".`);
+      Log('frontend', 'info', 'component', `Click recorded for shortcode "${shortcode}".`);
     } else {
-      Log('frontend', 'warn', 'service', `Attempted to record click for non-existent shortcode "${shortcode}".`);
+      Log('frontend', 'warn', 'component', `Attempted to record click for non-existent shortcode "${shortcode}".`);
     }
   },
 };

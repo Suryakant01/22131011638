@@ -6,7 +6,8 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { urlService } from '../services/urlService';
-import { ShortenedUrl, ClickData } from '../types/url.types';
+import type { ShortenedUrl } from '../types/url.types';
+import type { ClickData } from '../types/url.types';
 import { format } from 'date-fns';
 import { Log } from '../lib/logging/logger';
 

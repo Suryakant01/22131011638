@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, TextField, Typography, Paper, Grid, Alert, Link as MuiLink } from '@mui/material';
+import { Box, Button, TextField, Typography, Paper, Alert, Link as MuiLink } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { urlService } from '../services/urlService';
-import { ShortenedUrl } from '../types/url.types';
+import type { ShortenedUrl } from '../types/url.types';
 import { Log } from '../lib/logging/logger';
 import { format } from 'date-fns';
 
