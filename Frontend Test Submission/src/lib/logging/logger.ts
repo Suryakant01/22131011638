@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-// --- Type Definitions for Log Parameters (as per requirements) ---
+// --- Type Definitions (no changes here) ---
 type TStack = 'frontend' | 'backend';
 type TLevel = 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 type TFrontendPackage = 'api' | 'component' | 'hook' | 'page' | 'state' | 'style';
@@ -10,10 +10,11 @@ type TPackage = TFrontendPackage | TSharedPackage;
 // --- API Endpoint ---
 const LOGGING_API_URL = 'http://20.244.56.144/evaluation-service/logs';
 
-// ❗️❗️❗️ PASTE YOUR API KEY OR TOKEN HERE ❗️❗️❗️
-// It's better to store this in an environment variable, but for simplicity, we'll place it here.
-const API_AUTH_TOKEN = import.meta.env.VITE_API_AUTH_TOKEN 
-// Note: In a real application, you should never hardcode sensitive information like API keys.';
+// ❗️❗️❗️ THIS IS THE CORRECTED VALUE ❗️❗️❗️
+// Use ONLY the long string from the "access_token" field of the JSON response.
+const ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJNYXBDbGFpbXMiOnsiYXVkIjoiaHR0cDovLzIwLjI0NC41Ni4xNDQvZXZhbHVhdGlvbi1zZXJ2aWNlIiwiZW1haWwiOiJzdXJ5YWthbnQuMjJzY3NlMTAxMjc4MEBnYWxnb3RpYXN1bml2ZXJzaXR5LmVkdS5pbiIsImV4cCI6MTc1MTAxNjYwOCwiaWF0IjoxNzUxMDE1NzA4LCJpc3MiOiJBZmZvcmQgTWVkaWNhbCBUZWNobm9sb2dpZXMgUHJpdmF0ZSBMaW1pdGVkIiwianRpIjoiOTI2NzI2YWEtOWVjOC00ODcxLThiYWQtYjEwMDQ0ODBkMDdkIiwibG9jYWxlIjoiZW4tSU4iLCJuYW1lIjoic3VyeWFrYW50IHlhZGF2Iiwic3ViIjoiYWNhMzZjZWMtYjk4OC00YmQxLWJkYTEtZTcxZGM2NzQ0MDJhIn0sImVtYWlsIjoic3VyeWFrYW50LjIyc2NzZTEwMTI3ODBAZ2FsZ290aWFzdW5pdmVyc2l0eS5lZHUuaW4iLCJuYW1lIjoic3VyeWFrYW50IHlhZGF2Iiwicm9sbE5vIjoiMjIxMzEwMTE2MzgiLCJhY2Nlc3NDb2RlIjoiTXVhZ3ZxIiwiY2xpZW50SUQiOiJhY2EzNmNlYy1iOTg4LTRiZDEtYmRhMS1lNzFkYzY3NDQwMmEiLCJjbGllbnRTZWNyZXQiOiJmbVZyRE1hanNkS1N4TXBNIn0.AZ_VlPPj3wP_0ohh1DIsF1rRYCVhZ8ZhvAjrptbqgbg";
+
+// ... (rest of the file is correct and does not need to be changed)
 
 interface LogPayload {
   stack: TStack;
@@ -22,16 +23,7 @@ interface LogPayload {
   message: string;
 }
 
-/**
- * Sends a log to the remote logging service.
- * This is the mandatory logging function to be used across the application.
- *
- * @param stack - The application stack ('frontend').
- * @param level - The log level.
- * @param pkg - The package/module where the log originates.
- * @param message - The log message.
- */
-export const Log = async (stack: TStack, level: TLevel, pkg: TPackage, message:string): Promise<void> => {
+export const Log = async (stack: TStack, level: TLevel, pkg: TPackage, message: string): Promise<void> => {
   const payload: LogPayload = {
     stack,
     level,
@@ -40,17 +32,12 @@ export const Log = async (stack: TStack, level: TLevel, pkg: TPackage, message:s
   };
 
   try {
-    // ✅ ADDED HEADERS CONFIGURATION HERE
-    const response = await axios.post(LOGGING_API_URL, payload, {
+    await axios.post(LOGGING_API_URL, payload, {
       headers: {
-        // The header name might be 'Authorization', 'api-key', 'x-api-key', etc.
-        // 'Authorization' with a 'Bearer' token is the most common.
-        // Check your instructions for the exact header name required.
-        'Authorization': `Bearer ${API_AUTH_TOKEN}`,
+        'Authorization': `Bearer ${ACCESS_TOKEN}`,
         'Content-Type': 'application/json',
       },
     });
-
   } catch (error) {
     console.error('CRITICAL: Logging middleware failed to send log.', {
       originalPayload: payload,

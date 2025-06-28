@@ -6,7 +6,10 @@ import UrlStatisticsPage from './pages/UrlStatisticsPage';
 import RedirectHandler from './components/RedirectHandler';
 import { Log } from './lib/logging/logger';
 
-// The layout component with navigation
+/**
+ * The AppLayout component serves as the main visual shell for the application.
+ * It includes the top navigation bar and a container for the page content.
+ */
 const AppLayout: React.FC<{children: React.ReactNode}> = ({ children }) => {
     const location = useLocation();
 
@@ -43,32 +46,35 @@ const AppLayout: React.FC<{children: React.ReactNode}> = ({ children }) => {
     );
 };
 
-// The main App component
+
+/**
+ * The main App component sets up the application's routing.
+ */
 function App() {
   React.useEffect(() => {
+    // Log an event when the application first loads.
     Log('frontend', 'info', 'component', 'App component mounted');
   }, []);
 
   return (
+    <AppLayout>
       <Routes>
-        {/* Route for handling the redirection logic */}
+        {/* ✅ Define specific page routes FIRST to avoid conflicts. */}
+        <Route path="/" element={<UrlShortenerPage />} />
+        <Route path="/stats" element={<UrlStatisticsPage />} />
+
+        {/* ✅ The dynamic shortcode route comes AFTER specific routes. */}
+        {/* It will match anything that wasn't matched above (e.g., /abcd12). */}
         <Route path="/:shortcode" element={<RedirectHandler />} />
 
-        {/* Routes for pages within the main layout */}
+        {/* ✅ A final catch-all for any other routes to show a 404 page. */}
         <Route path="*" element={
-            <AppLayout>
-                <Routes>
-                    <Route path="/" element={<UrlShortenerPage />} />
-                    <Route path="/stats" element={<UrlStatisticsPage />} />
-                    <Route path="*" element={
-                        <Box sx={{textAlign: 'center', mt: 5}}>
-                            <Typography variant="h4">404: Page Not Found</Typography>
-                        </Box>
-                    } />
-                </Routes>
-            </AppLayout>
+            <Box sx={{textAlign: 'center', mt: 5}}>
+                <Typography variant="h4">404: Page Not Found</Typography>
+            </Box>
         } />
       </Routes>
+    </AppLayout>
   );
 }
 
